@@ -1,4 +1,4 @@
-package com.skyrel74.ricknmorty.presentation.characters
+package com.skyrel74.ricknmorty.presentation.character
 
 import android.os.Bundle
 import android.util.Log
@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.skyrel74.ricknmorty.R
 import com.skyrel74.ricknmorty.data.entities.Character
-import com.skyrel74.ricknmorty.databinding.FragmentCharactersBinding
-import com.skyrel74.ricknmorty.presentation.characters.CharacterAdapter.Companion.VISIBLE_THRESHOLD
+import com.skyrel74.ricknmorty.databinding.FragmentCharacterBinding
+import com.skyrel74.ricknmorty.presentation.character.CharacterAdapter.Companion.VISIBLE_THRESHOLD
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.BackpressureStrategy
@@ -20,9 +20,9 @@ import io.reactivex.rxjava3.processors.PublishProcessor
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
-class CharactersFragment : DaggerFragment(R.layout.fragment_characters) {
+class CharacterFragment : DaggerFragment(R.layout.fragment_character) {
 
-    private val binding by viewBinding(FragmentCharactersBinding::bind)
+    private val binding by viewBinding(FragmentCharacterBinding::bind)
     private var characterAdapter: CharacterAdapter? = null
 
     @Inject
@@ -53,7 +53,8 @@ class CharactersFragment : DaggerFragment(R.layout.fragment_characters) {
                     super.onScrolled(recyclerView, dx, dy)
 
                     val totalItemCount = layoutManager!!.itemCount
-                    val lastVisibleItem = (layoutManager!! as LinearLayoutManager).findLastVisibleItemPosition()
+                    val lastVisibleItem =
+                        (layoutManager!! as LinearLayoutManager).findLastVisibleItemPosition()
                     if (totalItemCount <= (lastVisibleItem + VISIBLE_THRESHOLD)) {
                         viewModel.pageNumber++
                         paginator.onNext(viewModel.pageNumber)
@@ -75,7 +76,7 @@ class CharactersFragment : DaggerFragment(R.layout.fragment_characters) {
                     .subscribeOn(Schedulers.io())
             }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe( { items: List<Character> ->
+            .subscribe({ items: List<Character> ->
                 val characters = characterAdapter!!.currentList.plus(items)
                 characterAdapter!!.submitList(characters)
                 binding.progressBar.visibility = View.GONE

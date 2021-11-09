@@ -5,9 +5,9 @@ import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.skyrel74.ricknmorty.R
 import com.skyrel74.ricknmorty.databinding.ActivityMainBinding
-import com.skyrel74.ricknmorty.presentation.characters.CharactersFragment
-import com.skyrel74.ricknmorty.presentation.episodes.EpisodesFragment
-import com.skyrel74.ricknmorty.presentation.locations.LocationsFragment
+import com.skyrel74.ricknmorty.presentation.character.CharacterFragment
+import com.skyrel74.ricknmorty.presentation.episode.EpisodeFragment
+import com.skyrel74.ricknmorty.presentation.location.LocationFragment
 import dagger.android.support.DaggerAppCompatActivity
 
 class MainActivity : DaggerAppCompatActivity(R.layout.activity_main) {
@@ -26,15 +26,15 @@ class MainActivity : DaggerAppCompatActivity(R.layout.activity_main) {
         binding.btmNavView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.characters -> {
-                    replaceFragment(CharactersFragment())
+                    replaceFragment(CharacterFragment())
                     true
                 }
                 R.id.locations -> {
-                    replaceFragment(LocationsFragment())
+                    replaceFragment(LocationFragment())
                     true
                 }
                 R.id.episodes -> {
-                    replaceFragment(EpisodesFragment())
+                    replaceFragment(EpisodeFragment())
                     true
                 }
                 else -> false

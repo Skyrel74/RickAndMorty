@@ -7,6 +7,8 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
 import com.skyrel74.ricknmorty.data.entities.Character
 import com.skyrel74.ricknmorty.data.entities.CharacterResult
+import com.skyrel74.ricknmorty.data.entities.Episode
+import com.skyrel74.ricknmorty.data.entities.EpisodeResult
 import java.io.ByteArrayOutputStream
 
 val Int.dp: Int
@@ -26,4 +28,12 @@ fun CharacterResult.toCharacter(): Character =
         this.species,
         this.gender,
         this.image.toUri()
+    )
+
+fun EpisodeResult.toEpisode(): Episode =
+    Episode(
+        this.id,
+        this.name,
+        this.episode,
+        this.airDate
     )

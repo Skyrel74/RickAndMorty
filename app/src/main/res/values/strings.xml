@@ -6,9 +6,14 @@
     <string name="location_label">Локации</string>
     <string name="episode_label">Эпизоды</string>
 
-    <!-- Characters Item -->
-    <string name="name_template">Имя: %s</string>
-    <string name="species_template">Вид: %s</string>
-    <string name="status_template">Статус: %s</string>
-    <string name="gender_template">Пол: %s</string>
+    <!-- Character Item -->
+    <string name="character_name_template">Имя: %s</string>
+    <string name="character_species_template">Вид: %s</string>
+    <string name="character_status_template">Статус: %s</string>
+    <string name="character_gender_template">Пол: %s</string>
+
+    <!-- Episode Item -->
+    <string name="episode_name_template">Название: %s</string>
+    <string name="episode_episode_template">Номер эпизода: %s</string>
+    <string name="episode_air_date_template">Дата релиза: %s</string>
 </resources>

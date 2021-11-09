@@ -1,8 +1,8 @@
 package com.skyrel74.ricknmorty.di.modules
 
-import com.skyrel74.ricknmorty.presentation.characters.CharactersFragment
-import com.skyrel74.ricknmorty.presentation.episodes.EpisodesFragment
-import com.skyrel74.ricknmorty.presentation.locations.LocationsFragment
+import com.skyrel74.ricknmorty.presentation.character.CharacterFragment
+import com.skyrel74.ricknmorty.presentation.episode.EpisodeFragment
+import com.skyrel74.ricknmorty.presentation.location.LocationFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -10,11 +10,11 @@ import dagger.android.ContributesAndroidInjector
 abstract class FragmentsModule {
 
     @ContributesAndroidInjector
-    abstract fun charactersFragment(): CharactersFragment
+    abstract fun characterFragment(): CharacterFragment
 
     @ContributesAndroidInjector
-    abstract fun locationsFragment(): LocationsFragment
+    abstract fun locationFragment(): LocationFragment
 
     @ContributesAndroidInjector
-    abstract fun episodesFragment(): EpisodesFragment
+    abstract fun episodeFragment(): EpisodeFragment
 }

@@ -1,10 +1,9 @@
-package com.skyrel74.ricknmorty.presentation.characters
+package com.skyrel74.ricknmorty.presentation.character
 
 import androidx.lifecycle.ViewModel
 import com.skyrel74.ricknmorty.data.entities.Character
 import com.skyrel74.ricknmorty.data.repository.CharacterRepository
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class CharacterViewModel @Inject constructor(

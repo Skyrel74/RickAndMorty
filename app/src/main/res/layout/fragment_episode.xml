@@ -6,16 +6,16 @@
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvCharacter"
+        android:id="@+id/rvEpisode"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:paddingVertical="16dp"
-        android:paddingHorizontal="24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/item_characters" />
+        tools:listitem="@layout/item_episode" />
 
     <ProgressBar
         android:id="@+id/progressBar"

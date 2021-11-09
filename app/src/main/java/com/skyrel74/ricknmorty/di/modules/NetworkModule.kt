@@ -2,6 +2,7 @@ package com.skyrel74.ricknmorty.di.modules
 
 import android.util.Log
 import com.skyrel74.ricknmorty.data.remote.CharacterService
+import com.skyrel74.ricknmorty.data.remote.EpisodeService
 import com.skyrel74.ricknmorty.di.Application.Companion.API_BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -44,4 +45,9 @@ class NetworkModule {
     @Provides
     fun provideCharacterService(client: Retrofit): CharacterService =
         client.create(CharacterService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideEpisodeService(client: Retrofit): EpisodeService =
+        client.create(EpisodeService::class.java)
 }

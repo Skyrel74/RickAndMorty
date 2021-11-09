@@ -1,4 +1,4 @@
-package com.skyrel74.ricknmorty.presentation.characters
+package com.skyrel74.ricknmorty.presentation.character
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,9 +6,8 @@ import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.skyrel74.ricknmorty.data.entities.Character
-import com.skyrel74.ricknmorty.databinding.ItemCharactersBinding
+import com.skyrel74.ricknmorty.databinding.ItemCharacterBinding
 import java.util.*
 
 class CharacterAdapter(
@@ -17,7 +16,7 @@ class CharacterAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemCharactersBinding.inflate(inflater, parent, false)
+        val binding = ItemCharacterBinding.inflate(inflater, parent, false)
         return CharacterViewHolder(binding, onItemClick)
     }
 
@@ -29,12 +28,12 @@ class CharacterAdapter(
         override fun performFiltering(charSequence: CharSequence?): FilterResults {
             val charSearch = charSequence.toString()
             val filterResults = FilterResults()
-            val charactersList = this@CharacterAdapter.currentList
+            val characterList = this@CharacterAdapter.currentList
             filterResults.values = if (charSearch.isEmpty()) {
-                charactersList
+                characterList
             } else {
                 val resultList = mutableListOf<Character>()
-                for (character in charactersList)
+                for (character in characterList)
                     if (character.name.lowercase(Locale.ROOT)
                             .contains(charSearch.lowercase(Locale.ROOT))
                     )

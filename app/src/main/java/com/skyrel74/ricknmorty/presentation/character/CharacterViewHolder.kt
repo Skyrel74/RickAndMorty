@@ -1,13 +1,13 @@
-package com.skyrel74.ricknmorty.presentation.characters
+package com.skyrel74.ricknmorty.presentation.character
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.skyrel74.ricknmorty.R
 import com.skyrel74.ricknmorty.data.entities.Character
-import com.skyrel74.ricknmorty.databinding.ItemCharactersBinding
+import com.skyrel74.ricknmorty.databinding.ItemCharacterBinding
 
 class CharacterViewHolder(
-    private val binding: ItemCharactersBinding,
+    private val binding: ItemCharacterBinding,
     private val onItemClick: (Character) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -17,10 +17,10 @@ class CharacterViewHolder(
                 .load(item.image)
                 .skipMemoryCache(true)
                 .into(ivCharacter)
-            tvName.text = getStringInTemplate(R.string.name_template, item.name)
-            tvSpecies.text = getStringInTemplate(R.string.species_template, item.species)
-            tvStatus.text = getStringInTemplate(R.string.status_template, item.status)
-            tvGender.text = getStringInTemplate(R.string.gender_template, item.gender)
+            tvName.text = getStringInTemplate(R.string.character_name_template, item.name)
+            tvSpecies.text = getStringInTemplate(R.string.character_species_template, item.species)
+            tvStatus.text = getStringInTemplate(R.string.character_status_template, item.status)
+            tvGender.text = getStringInTemplate(R.string.character_gender_template, item.gender)
             itemCharacter.setOnClickListener {
                 onItemClick(item)
             }

@@ -16,4 +16,9 @@
     <string name="episode_name_template">Название: %s</string>
     <string name="episode_episode_template">Номер эпизода: %s</string>
     <string name="episode_air_date_template">Дата релиза: %s</string>
+
+    <!-- Location Item -->
+    <string name="location_name_template">Название: %s</string>
+    <string name="location_type_template">Тип: %s</string>
+    <string name="location_dimension_template">Измерение: %s</string>
 </resources>

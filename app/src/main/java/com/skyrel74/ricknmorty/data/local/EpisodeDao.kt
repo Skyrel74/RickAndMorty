@@ -15,5 +15,5 @@ interface EpisodeDao {
     fun getAll(): Observable<List<Episode>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(pizzaList: List<Episode>): Completable
+    fun insertAll(episodeList: List<Episode>): Completable
 }

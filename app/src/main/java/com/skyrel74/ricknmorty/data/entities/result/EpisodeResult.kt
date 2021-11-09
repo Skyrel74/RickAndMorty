@@ -1,4 +1,4 @@
-package com.skyrel74.ricknmorty.data.entities
+package com.skyrel74.ricknmorty.data.entities.result
 
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName

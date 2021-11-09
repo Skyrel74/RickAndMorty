@@ -6,9 +6,11 @@ import android.graphics.drawable.Drawable
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
 import com.skyrel74.ricknmorty.data.entities.Character
-import com.skyrel74.ricknmorty.data.entities.CharacterResult
 import com.skyrel74.ricknmorty.data.entities.Episode
-import com.skyrel74.ricknmorty.data.entities.EpisodeResult
+import com.skyrel74.ricknmorty.data.entities.Location
+import com.skyrel74.ricknmorty.data.entities.result.CharacterResult
+import com.skyrel74.ricknmorty.data.entities.result.EpisodeResult
+import com.skyrel74.ricknmorty.data.entities.result.LocationResult
 import java.io.ByteArrayOutputStream
 
 val Int.dp: Int
@@ -36,4 +38,12 @@ fun EpisodeResult.toEpisode(): Episode =
         this.name,
         this.episode,
         this.airDate
+    )
+
+fun LocationResult.toLocation(): Location =
+    Location(
+        this.id,
+        this.name,
+        this.type,
+        this.dimension
     )

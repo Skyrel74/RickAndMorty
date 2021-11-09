@@ -4,16 +4,16 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.skyrel74.ricknmorty.data.entities.Character
+import com.skyrel74.ricknmorty.data.entities.Location
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 
 @Dao
-interface CharacterDao {
+interface LocationDao {
 
-    @Query("SELECT * FROM character_table")
-    fun getAll(): Observable<List<Character>>
+    @Query("SELECT * FROM location_table")
+    fun getAll(): Observable<List<Location>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(characterList: List<Character>): Completable
+    fun insertAll(locationList: List<Location>): Completable
 }

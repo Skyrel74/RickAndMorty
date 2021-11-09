@@ -7,17 +7,20 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.skyrel74.ricknmorty.data.entities.Character
 import com.skyrel74.ricknmorty.data.entities.Episode
+import com.skyrel74.ricknmorty.data.entities.Location
 import com.skyrel74.ricknmorty.util.Converters
 
 @Database(entities = [
     Character::class,
-    Episode::class
-], version = 3, exportSchema = false)
+    Episode::class,
+    Location::class
+], version = 4, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class ApplicationDatabase : RoomDatabase() {
 
     abstract fun characterDao(): CharacterDao
     abstract fun episodeDao(): EpisodeDao
+    abstract fun locationDao(): LocationDao
 
     companion object {
 

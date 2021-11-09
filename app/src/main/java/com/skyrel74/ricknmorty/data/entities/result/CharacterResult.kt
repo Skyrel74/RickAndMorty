@@ -1,4 +1,4 @@
-package com.skyrel74.ricknmorty.data.entities
+package com.skyrel74.ricknmorty.data.entities.result
 
 import com.google.gson.annotations.SerializedName
 
@@ -14,7 +14,7 @@ data class CharacterResult(
     @SerializedName("image")
     val image: String,
     @SerializedName("location")
-    val location: Location,
+    val location: CharacterLocation,
     @SerializedName("name")
     val name: String,
     @SerializedName("origin")
@@ -36,7 +36,7 @@ data class Origin(
     val url: String,
 )
 
-data class Location(
+data class CharacterLocation(
     @SerializedName("name")
     val name: String,
     @SerializedName("url")

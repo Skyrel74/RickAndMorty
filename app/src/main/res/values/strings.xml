@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Rick\'n\'Morty</string>
+
+    <!-- MainActivity -->
+    <string name="character_label">Персонажи</string>
+    <string name="location_label">Локации</string>
+    <string name="episode_label">Эпизоды</string>
+
+    <!-- Characters Item -->
+    <string name="name_template">Имя: %s</string>
+    <string name="species_template">Вид: %s</string>
+    <string name="status_template">Статус: %s</string>
+    <string name="gender_template">Пол: %s</string>
+</resources>

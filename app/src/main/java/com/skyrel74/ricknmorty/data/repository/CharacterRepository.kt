@@ -9,13 +9,12 @@ import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 
 class CharacterRepository @Inject constructor(
-    private val isNetworkAvailable: Boolean,
     private val local: CharacterDao,
     private val remote: CharacterService,
 ) {
 
     fun getAll(page: Int): Observable<List<Character>> {
-        return if (isNetworkAvailable) {
+        if (isNetworkAvailable) {
             remote.getAllCharacters(page)
                 .map { response ->
                     response.results.map { it.toCharacter() }
@@ -27,10 +26,9 @@ class CharacterRepository @Inject constructor(
                 }.doOnError {
                     Log.e("CharacterRepository", it.stackTraceToString())
                 }.toObservable()
-        } else {
-            local.getAll().doOnError {
-                Log.e("CharacterRepository", it.stackTraceToString())
-            }
+        }
+        return local.getAll().doOnError {
+            Log.e("CharacterRepository", it.stackTraceToString())
         }
     }
 }

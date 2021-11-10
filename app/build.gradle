@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.skyrel74.ricknmorty"
-        minSdk 23
+        minSdk 24
         targetSdk 31
         versionCode 1
         versionName "1.0"
@@ -74,4 +74,13 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    // SwipeRefreshLayout
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefreshLayoutVersion"
+
+    // ReactiveNetwork
+    implementation "com.github.pwittchen:reactivenetwork-rx2:$reactiveNetworkVersion"
+
+    // RxJavaBridge
+    implementation "com.github.akarnokd:rxjava3-bridge:$rxJavaBridgeVersion"
 }

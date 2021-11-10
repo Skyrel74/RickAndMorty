@@ -35,12 +35,23 @@ class CharacterFragment : DaggerFragment(R.layout.fragment_character) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(binding.rvCharacter) {
-            layoutManager = GridLayoutManager(requireContext(), 2)
-            adapter = CharacterAdapter {
-                // Do smth on item click
-            }.also { characterAdapter = it }
+        with(binding) {
+            with(rvCharacter) {
+                layoutManager = GridLayoutManager(requireContext(), 2)
+                adapter = CharacterAdapter {
+                    // Do smth on item click
+                }.also { characterAdapter = it }
+            }
+            swipeContainer.setOnRefreshListener {
+                refreshData()
+            }
+
+            swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light)
         }
+
 
         setupListListener()
         subscribeForData()
@@ -67,7 +78,7 @@ class CharacterFragment : DaggerFragment(R.layout.fragment_character) {
     private fun subscribeForData() {
         val pagination = paginator
             .onBackpressureDrop()
-            .doOnNext {
+            .doOnSubscribe {
                 binding.progressBar.visibility = View.VISIBLE
             }
             .concatMap { page: Int ->
@@ -85,6 +96,17 @@ class CharacterFragment : DaggerFragment(R.layout.fragment_character) {
         compositeDisposable.add(pagination)
 
         paginator.onNext(viewModel.pageNumber)
+    }
+
+    private fun refreshData() {
+        val characters = viewModel.getCharacters()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe({ items: List<Character> ->
+                characterAdapter!!.submitList(items)
+                binding.swipeContainer.isRefreshing = false
+            }, this::showError)
+        compositeDisposable.add(characters)
     }
 
     private fun showError(e: Throwable) {

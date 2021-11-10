@@ -9,6 +9,9 @@ buildscript {
         retrofitVersion = '2.9.0'
         roomVersion = '2.3.0'
         daggerVersion = '2.38.1'
+        swipeRefreshLayoutVersion = '1.1.0'
+        reactiveNetworkVersion = '3.0.8'
+        rxJavaBridgeVersion = '3.0.0'
     }
     repositories {
         google()

@@ -1,14 +1,16 @@
 package com.skyrel74.ricknmorty.data.entities.result
 
 import com.google.gson.annotations.SerializedName
+import com.skyrel74.ricknmorty.data.entities.Gender
+import com.skyrel74.ricknmorty.data.entities.Status
 
 data class CharacterResult(
     @SerializedName("created")
     val created: String,
     @SerializedName("episode")
-    val episode: List<Any>,
+    val episode: List<String>,
     @SerializedName("gender")
-    val gender: String,
+    val gender: Gender,
     @SerializedName("id")
     val id: Int,
     @SerializedName("image")
@@ -22,7 +24,7 @@ data class CharacterResult(
     @SerializedName("species")
     val species: String,
     @SerializedName("status")
-    val status: String,
+    val status: Status,
     @SerializedName("type")
     val type: String,
     @SerializedName("url")

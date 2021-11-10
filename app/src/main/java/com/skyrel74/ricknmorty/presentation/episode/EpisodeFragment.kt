@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,6 +42,8 @@ class EpisodeFragment : DaggerFragment(R.layout.fragment_episode) {
                 adapter = EpisodeAdapter {
                     // Do smth on item click
                 }.also { episodeAdapter = it }
+                addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.VERTICAL))
+                addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.HORIZONTAL))
             }
             swipeContainer.setOnRefreshListener {
                 refreshData()

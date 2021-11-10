@@ -13,11 +13,38 @@ data class Character(
     @SerializedName("name")
     val name: String,
     @SerializedName("status")
-    val status: String,
+    val status: Status,
     @SerializedName("species")
     val species: String,
     @SerializedName("gender")
-    val gender: String,
+    val gender: Gender,
     @SerializedName("image")
     val image: Uri,
 )
+
+enum class Status {
+
+    @SerializedName("Alive")
+    Жив,
+
+    @SerializedName("Dead")
+    Мёртв,
+
+    @SerializedName("unknown")
+    Неизвестно
+}
+
+enum class Gender {
+
+    @SerializedName("Female")
+    Женщина,
+
+    @SerializedName("Male")
+    Мужчина,
+
+    @SerializedName("Genderless")
+    Бесполый,
+
+    @SerializedName("unknown")
+    Неизвестно
+}

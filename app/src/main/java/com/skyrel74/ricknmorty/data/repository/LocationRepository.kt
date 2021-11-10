@@ -24,7 +24,7 @@ class LocationRepository @Inject constructor(
     private var remoteCount: Int = Int.MAX_VALUE
 
     fun getAll(page: Int): Observable<List<Location>> =
-        if (isNetworkConnected && remoteCount >= localCount)
+        if (isNetworkConnected && remoteCount > localCount)
             getRemote(page)
         else
             getLocal()

@@ -20,8 +20,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:paddingHorizontal="24dp"
-            android:paddingVertical="16dp"
             tools:listitem="@layout/item_location" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

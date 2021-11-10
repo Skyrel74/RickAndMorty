@@ -19,8 +19,10 @@ class CharacterViewHolder(
                 .into(ivCharacter)
             tvName.text = getStringInTemplate(R.string.character_name_template, item.name)
             tvSpecies.text = getStringInTemplate(R.string.character_species_template, item.species)
-            tvStatus.text = getStringInTemplate(R.string.character_status_template, item.status)
-            tvGender.text = getStringInTemplate(R.string.character_gender_template, item.gender)
+            tvStatus.text =
+                getStringInTemplate(R.string.character_status_template, item.status.toString())
+            tvGender.text =
+                getStringInTemplate(R.string.character_gender_template, item.gender.toString())
             itemCharacter.setOnClickListener {
                 onItemClick(item)
             }

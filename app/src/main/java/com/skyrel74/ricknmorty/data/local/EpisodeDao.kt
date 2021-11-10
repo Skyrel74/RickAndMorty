@@ -18,5 +18,5 @@ interface EpisodeDao {
     fun insertAll(episodeList: List<Episode>): Completable
 
     @Query("SELECT COUNT(id) FROM episode_table")
-    fun getCount(): Int
+    fun getCount(): Observable<Int>
 }

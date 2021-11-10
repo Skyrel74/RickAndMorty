@@ -18,5 +18,5 @@ interface CharacterDao {
     fun insertAll(characterList: List<Character>): Completable
 
     @Query("SELECT COUNT(id) FROM character_table")
-    fun getCount(): Int
+    fun getCount(): Observable<Int>
 }

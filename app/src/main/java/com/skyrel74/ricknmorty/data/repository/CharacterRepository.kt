@@ -14,8 +14,17 @@ class CharacterRepository @Inject constructor(
     private val remote: CharacterService,
 ) {
 
+    init {
+        local.getCount().subscribe({
+            localCount = it
+        }, { logError(it) })
+    }
+
+    private var localCount: Int = Int.MAX_VALUE
+    private var remoteCount: Int = Int.MAX_VALUE
+
     fun getAll(page: Int): Observable<List<Character>> =
-        if (isNetworkConnected)
+        if (isNetworkConnected && remoteCount >= localCount)
             getRemote(page)
         else
             getLocal()
@@ -25,6 +34,7 @@ class CharacterRepository @Inject constructor(
     private fun getRemote(page: Int): Observable<List<Character>> =
         remote.getAllCharacters(page)
             .map { response ->
+                remoteCount = response.info.count
                 response.results.map { it.toCharacter() }
             }
             .doOnSuccess { characters ->

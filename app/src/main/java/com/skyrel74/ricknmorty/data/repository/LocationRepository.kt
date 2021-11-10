@@ -14,8 +14,17 @@ class LocationRepository @Inject constructor(
     private val remote: LocationService,
 ) {
 
+    init {
+        local.getCount().subscribe({
+            localCount = it
+        }, { logError(it) })
+    }
+
+    private var localCount: Int = Int.MAX_VALUE
+    private var remoteCount: Int = Int.MAX_VALUE
+
     fun getAll(page: Int): Observable<List<Location>> =
-        if (isNetworkConnected)
+        if (isNetworkConnected && remoteCount >= localCount)
             getRemote(page)
         else
             getLocal()
@@ -25,6 +34,7 @@ class LocationRepository @Inject constructor(
     private fun getRemote(page: Int): Observable<List<Location>> =
         remote.getAllLocations(page)
             .map { response ->
+                remoteCount = response.info.count
                 response.results.map { it.toLocation() }
             }
             .doOnSuccess { locations ->

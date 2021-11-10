@@ -67,8 +67,7 @@ class CharacterFragment : DaggerFragment(R.layout.fragment_character) {
                     val lastVisibleItem =
                         (layoutManager!! as LinearLayoutManager).findLastVisibleItemPosition()
                     if (totalItemCount <= (lastVisibleItem + VISIBLE_THRESHOLD)) {
-                        viewModel.pageNumber++
-                        paginator.onNext(viewModel.pageNumber)
+                        paginator.onNext(viewModel.pageNumber + 1)
                     }
                 }
             })
@@ -99,12 +98,12 @@ class CharacterFragment : DaggerFragment(R.layout.fragment_character) {
     }
 
     private fun refreshData() {
-        val characters = viewModel.getCharacters()
+        val characters = viewModel.refresh()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
+            .doFinally { binding.swipeContainer.isRefreshing = false }
             .subscribe({ items: List<Character> ->
                 characterAdapter!!.submitList(items)
-                binding.swipeContainer.isRefreshing = false
             }, this::showError)
         compositeDisposable.add(characters)
     }

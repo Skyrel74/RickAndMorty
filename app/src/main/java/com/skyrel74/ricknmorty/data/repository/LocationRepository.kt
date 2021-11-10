@@ -4,6 +4,7 @@ import android.util.Log
 import com.skyrel74.ricknmorty.data.entities.Location
 import com.skyrel74.ricknmorty.data.local.LocationDao
 import com.skyrel74.ricknmorty.data.remote.LocationService
+import com.skyrel74.ricknmorty.di.Application.Companion.Variables.isNetworkConnected
 import com.skyrel74.ricknmorty.util.toLocation
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
@@ -13,22 +14,30 @@ class LocationRepository @Inject constructor(
     private val remote: LocationService,
 ) {
 
-    fun getAll(page: Int): Observable<List<Location>> {
-        if (isNetworkAvailable) {
-            remote.getAllLocations(page)
-                .map { response ->
-                    response.results.map { it.toLocation() }
-                }
-                .doOnSuccess { characters ->
-                    local.insertAll(characters).subscribe({}, {
-                        Log.e("CharacterRepository", it.stackTraceToString())
-                    })
-                }.doOnError {
-                    Log.e("CharacterRepository", it.stackTraceToString())
-                }.toObservable()
-        }
-        return local.getAll().doOnError {
-            Log.e("CharacterRepository", it.stackTraceToString())
-        }
+    fun getAll(page: Int): Observable<List<Location>> =
+        if (isNetworkConnected)
+            getRemote(page)
+        else
+            getLocal()
+
+    fun refresh(): Observable<List<Location>> = getRemote(1)
+
+    private fun getRemote(page: Int): Observable<List<Location>> =
+        remote.getAllLocations(page)
+            .map { response ->
+                response.results.map { it.toLocation() }
+            }
+            .doOnSuccess { locations ->
+                saveLocal(locations)
+            }
+            .doOnError { logError(it) }
+            .toObservable()
+
+    private fun saveLocal(locations: List<Location>) {
+        local.insertAll(locations).subscribe({}, { logError(it) })
     }
+
+    private fun getLocal(): Observable<List<Location>> = local.getAll().doOnError { logError(it) }
+
+    private fun logError(e: Throwable) = Log.e("LocationRepository", e.stackTraceToString())
 }

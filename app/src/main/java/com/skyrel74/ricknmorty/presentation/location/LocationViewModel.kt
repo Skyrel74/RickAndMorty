@@ -13,4 +13,6 @@ class LocationViewModel @Inject constructor(
     var pageNumber: Int = 1
 
     fun getLocations(): Observable<List<Location>> = locationRepository.getAll(pageNumber)
+
+    fun refresh(): Observable<List<Location>> = locationRepository.refresh()
 }

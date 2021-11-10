@@ -35,11 +35,21 @@ class EpisodeFragment : DaggerFragment(R.layout.fragment_episode) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(binding.rvEpisode) {
-            layoutManager = GridLayoutManager(requireContext(), 2)
-            adapter = EpisodeAdapter {
-                // Do smth on item click
-            }.also { episodeAdapter = it }
+        with(binding) {
+            with(rvEpisode) {
+                layoutManager = GridLayoutManager(requireContext(), 2)
+                adapter = EpisodeAdapter {
+                    // Do smth on item click
+                }.also { episodeAdapter = it }
+            }
+            swipeContainer.setOnRefreshListener {
+                refreshData()
+            }
+
+            swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light)
         }
 
         setupListListener()
@@ -56,8 +66,7 @@ class EpisodeFragment : DaggerFragment(R.layout.fragment_episode) {
                     val lastVisibleItem =
                         (layoutManager!! as LinearLayoutManager).findLastVisibleItemPosition()
                     if (totalItemCount <= (lastVisibleItem + VISIBLE_THRESHOLD)) {
-                        viewModel.pageNumber++
-                        paginator.onNext(viewModel.pageNumber)
+                        paginator.onNext(viewModel.pageNumber + 1)
                     }
                 }
             })
@@ -67,7 +76,7 @@ class EpisodeFragment : DaggerFragment(R.layout.fragment_episode) {
     private fun subscribeForData() {
         val pagination = paginator
             .onBackpressureDrop()
-            .doOnNext {
+            .doOnSubscribe {
                 binding.progressBar.visibility = View.VISIBLE
             }
             .concatMap { page: Int ->
@@ -77,14 +86,25 @@ class EpisodeFragment : DaggerFragment(R.layout.fragment_episode) {
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ items: List<Episode> ->
-                val characters = episodeAdapter!!.currentList.plus(items)
-                episodeAdapter!!.submitList(characters)
+                val episodes = episodeAdapter!!.currentList.plus(items)
+                episodeAdapter!!.submitList(episodes)
                 binding.progressBar.visibility = View.GONE
             }, this::showError)
 
         compositeDisposable.add(pagination)
 
         paginator.onNext(viewModel.pageNumber)
+    }
+
+    private fun refreshData() {
+        val characters = viewModel.refresh()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .doFinally { binding.swipeContainer.isRefreshing = false }
+            .subscribe({ items: List<Episode> ->
+                episodeAdapter!!.submitList(items)
+            }, this::showError)
+        compositeDisposable.add(characters)
     }
 
     private fun showError(e: Throwable) {

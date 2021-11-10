@@ -16,4 +16,7 @@ interface CharacterDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(characterList: List<Character>): Completable
+
+    @Query("SELECT COUNT(id) FROM character_table")
+    fun getCount(): Int
 }

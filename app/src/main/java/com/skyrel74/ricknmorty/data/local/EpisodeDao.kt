@@ -16,4 +16,7 @@ interface EpisodeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(episodeList: List<Episode>): Completable
+
+    @Query("SELECT COUNT(id) FROM episode_table")
+    fun getCount(): Int
 }

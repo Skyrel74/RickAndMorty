@@ -13,4 +13,6 @@ class EpisodeViewModel @Inject constructor(
     var pageNumber: Int = 1
 
     fun getEpisodes(): Observable<List<Episode>> = episodeRepository.getAll(pageNumber)
+
+    fun refresh(): Observable<List<Episode>> = episodeRepository.refresh()
 }

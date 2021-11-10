@@ -16,4 +16,7 @@ interface LocationDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(locationList: List<Location>): Completable
+
+    @Query("SELECT COUNT(id) FROM location_table")
+    fun getCount(): Int
 }

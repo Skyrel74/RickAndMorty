@@ -50,7 +50,7 @@ class EpisodeAdapter(
 
     companion object {
 
-        const val VISIBLE_THRESHOLD = 10
+        const val VISIBLE_THRESHOLD = 16
 
         private object DiffUtilCallback : DiffUtil.ItemCallback<Episode>() {
             override fun areItemsTheSame(oldItem: Episode, newItem: Episode) =

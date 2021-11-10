@@ -50,7 +50,7 @@ class LocationAdapter(
 
     companion object {
 
-        const val VISIBLE_THRESHOLD = 10
+        const val VISIBLE_THRESHOLD = 16
 
         private object DiffUtilCallback : DiffUtil.ItemCallback<Location>() {
             override fun areItemsTheSame(oldItem: Location, newItem: Location) =

@@ -13,4 +13,6 @@ class CharacterViewModel @Inject constructor(
     var pageNumber: Int = 1
 
     fun getCharacters(): Observable<List<Character>> = characterRepository.getAll(pageNumber)
+
+    fun refresh(): Observable<List<Character>> = characterRepository.refresh()
 }

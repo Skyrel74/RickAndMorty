@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/item_episode"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="8dp">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvName"
+        android:layout_width="135dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:inputType="textMultiLine"
+        android:maxWidth="128dp"
+        android:maxLines="4"
+        android:minHeight="48dp"
+        android:text="@string/episode_name_template"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvEpisode"
+        android:layout_width="136dp"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:maxWidth="128dp"
+        android:maxLines="4"
+        android:minHeight="48dp"
+        android:text="@string/episode_episode_template"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@id/tvName"
+        app:layout_constraintTop_toTopOf="@id/tvName" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvAirDate"
+        android:layout_width="136dp"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:maxWidth="128dp"
+        android:maxLines="4"
+        android:minHeight="48dp"
+        android:text="@string/episode_air_date_template"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@id/tvEpisode"
+        app:layout_constraintTop_toTopOf="@id/tvEpisode" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

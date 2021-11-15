@@ -12,6 +12,10 @@
     <string name="character_status_template">Статус: %s</string>
     <string name="character_gender_template">Пол: %s</string>
 
+    <!-- Character Details -->
+    <string name="character_origin_template">Родная планета: %s</string>
+    <string name="character_location_template">Текущее местонахождение: %s</string>
+
     <!-- Episode Item -->
     <string name="episode_name_template">Название: %s</string>
     <string name="episode_episode_template">Номер эпизода: %s</string>

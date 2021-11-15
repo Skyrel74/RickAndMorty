@@ -1,6 +1,7 @@
 package com.skyrel74.ricknmorty.presentation.main
 
 import android.os.Bundle
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.skyrel74.ricknmorty.R
@@ -45,4 +46,14 @@ class MainActivity : DaggerAppCompatActivity(R.layout.activity_main) {
         supportFragmentManager.beginTransaction()
             .replace(containerId, fragment)
             .commit()
+
+    fun showBottomNavigation(flag: Boolean = true) {
+        binding.btmNavView.isVisible = flag
+    }
+
+    override fun onBackPressed() =
+        if (supportFragmentManager.backStackEntryCount == 0)
+            finish()
+        else
+            super.onBackPressed()
 }

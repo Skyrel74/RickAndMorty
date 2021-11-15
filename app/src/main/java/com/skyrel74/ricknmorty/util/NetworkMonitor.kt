@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
-import android.net.NetworkInfo
 import android.net.NetworkRequest
 import androidx.annotation.RequiresPermission
 import com.skyrel74.ricknmorty.di.Application.Companion.Variables
@@ -42,17 +41,6 @@ constructor(private val application: Application) {
 
         override fun onLost(network: Network) {
             Variables.isNetworkConnected = false
-        }
-    }
-
-    /**Deprecated Code*/
-    fun oldNetwork() {
-        fun isNetworkAvailable(): Boolean {
-            val connectivityManager = application.getSystemService(Context.CONNECTIVITY_SERVICE)
-            return if (connectivityManager is ConnectivityManager) {
-                val networkInfo: NetworkInfo? = connectivityManager.activeNetworkInfo
-                networkInfo?.isConnected ?: false
-            } else false
         }
     }
 }

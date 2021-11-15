@@ -12,6 +12,9 @@ import com.skyrel74.ricknmorty.R
 import com.skyrel74.ricknmorty.data.entities.Character
 import com.skyrel74.ricknmorty.databinding.FragmentCharacterBinding
 import com.skyrel74.ricknmorty.presentation.character.CharacterAdapter.Companion.VISIBLE_THRESHOLD
+import com.skyrel74.ricknmorty.presentation.characterDetails.CHARACTER_ID_KEY
+import com.skyrel74.ricknmorty.presentation.characterDetails.CharacterDetailsFragment
+import com.skyrel74.ricknmorty.presentation.main.MainActivity
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.BackpressureStrategy
@@ -35,23 +38,35 @@ class CharacterFragment : DaggerFragment(R.layout.fragment_character) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (activity as MainActivity).showBottomNavigation(true)
+
         with(binding) {
             with(rvCharacter) {
                 layoutManager = GridLayoutManager(requireContext(), 2)
                 adapter = CharacterAdapter {
-                    // Do smth on item click
+                    val fragment = CharacterDetailsFragment()
+                    val bundle = Bundle()
+                    bundle.putInt(CHARACTER_ID_KEY, it.id)
+                    fragment.arguments = bundle
+                    parentFragmentManager.beginTransaction()
+                        .replace(
+                            R.id.fragment_container,
+                            fragment
+                        ).addToBackStack("qwe").commit()
+                    (activity as MainActivity).showBottomNavigation(false)
                 }.also { characterAdapter = it }
             }
             swipeContainer.setOnRefreshListener {
                 refreshData()
             }
 
-            swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+            swipeContainer.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
-                android.R.color.holo_red_light)
+                android.R.color.holo_red_light
+            )
         }
-
 
         setupListListener()
         subscribeForData()
@@ -76,7 +91,7 @@ class CharacterFragment : DaggerFragment(R.layout.fragment_character) {
 
     private fun subscribeForData() {
         val pagination = paginator
-            .onBackpressureDrop()
+            .onBackpressureBuffer()
             .doOnSubscribe {
                 binding.progressBar.visibility = View.VISIBLE
             }

@@ -2,11 +2,11 @@ package com.skyrel74.ricknmorty.util
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.skyrel74.ricknmorty.data.entities.CharacterLocation
 import java.io.File
 import javax.inject.Inject
 
@@ -17,10 +17,31 @@ class Converters @Inject constructor(
 ) {
 
     @TypeConverter
-    fun fromString(string: String): Uri = Uri.parse(string)
+    fun stringListFromString(stringListString: String): List<String> =
+        stringListString.split(",").map { it }
 
     @TypeConverter
-    fun toString(url: Uri): String = saveToFile(url).toString()
+    fun stringListToString(stringList: List<String>): String =
+        stringList.joinToString(separator = ",")
+
+    @TypeConverter
+    fun characterLocationFromString(stringLocation: String): CharacterLocation {
+        val fields: List<String> = stringLocation.split(",")
+        return CharacterLocation(
+            fields[0],
+            fields[1]
+        )
+    }
+
+    @TypeConverter
+    fun characterLocationToString(location: CharacterLocation): String =
+        "${location.name},${location.url}"
+
+    @TypeConverter
+    fun uriFromString(string: String): Uri = Uri.parse(string)
+
+    @TypeConverter
+    fun uriToString(url: Uri): String = saveToFile(url).toString()
 
     private fun saveToFile(url: Uri): Uri {
         val drawable = glideRequestManager

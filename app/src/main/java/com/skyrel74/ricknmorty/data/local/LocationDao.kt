@@ -14,8 +14,14 @@ interface LocationDao {
     @Query("SELECT * FROM location_table")
     fun getAll(): Observable<List<Location>>
 
+    @Query("SELECT * FROM location_table WHERE id LIKE :id")
+    fun get(id: Int): Observable<Location>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(locationList: List<Location>): Completable
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(location: Location): Completable
 
     @Query("SELECT COUNT(id) FROM location_table")
     fun getCount(): Observable<Int>

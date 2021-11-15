@@ -1,10 +1,13 @@
 package com.skyrel74.ricknmorty.di.modules
 
-import android.util.Log
+import android.net.Uri
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.skyrel74.ricknmorty.data.remote.CharacterService
 import com.skyrel74.ricknmorty.data.remote.EpisodeService
 import com.skyrel74.ricknmorty.data.remote.LocationService
 import com.skyrel74.ricknmorty.di.Application.Companion.API_BASE_URL
+import com.skyrel74.ricknmorty.util.UriDeserializer
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -22,7 +25,13 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideGsonConverterFactory(): GsonConverterFactory = GsonConverterFactory.create()
+    fun provideGson(): Gson =
+        GsonBuilder().registerTypeAdapter(Uri::class.java, UriDeserializer()).create()
+
+    @Singleton
+    @Provides
+    fun provideGsonConverterFactory(gson: Gson): GsonConverterFactory =
+        GsonConverterFactory.create(gson)
 
     @Singleton
     @Provides
@@ -34,8 +43,6 @@ class NetworkModule {
         .client(OkHttpClient().newBuilder().addInterceptor { chain ->
             val request = chain.request()
             val response = chain.proceed(request)
-            Log.e("qwe", request.toString())
-            Log.e("qwe", response.toString())
             response
         }.build())
         .addCallAdapterFactory(callAdapterFactory)

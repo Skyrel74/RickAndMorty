@@ -18,33 +18,23 @@ data class Character(
     val species: String,
     @SerializedName("gender")
     val gender: Gender,
+    @SerializedName("origin")
+    val origin: CharacterLocation,
+    @SerializedName("location")
+    val location: CharacterLocation,
     @SerializedName("image")
     val image: Uri,
+    @SerializedName("episode")
+    val episodeUrls: List<String>,
+    @SerializedName("url")
+    val url: String,
+    @SerializedName("created")
+    val created: String,
 )
 
-enum class Status {
-
-    @SerializedName("Alive")
-    Жив,
-
-    @SerializedName("Dead")
-    Мёртв,
-
-    @SerializedName("unknown")
-    Неизвестно
-}
-
-enum class Gender {
-
-    @SerializedName("Female")
-    Женщина,
-
-    @SerializedName("Male")
-    Мужчина,
-
-    @SerializedName("Genderless")
-    Бесполый,
-
-    @SerializedName("unknown")
-    Неизвестно
-}
+data class CharacterLocation(
+    @SerializedName("name")
+    val name: String,
+    @SerializedName("url")
+    val url: String,
+)

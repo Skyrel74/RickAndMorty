@@ -12,7 +12,10 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.skyrel74.ricknmorty.R
 import com.skyrel74.ricknmorty.data.entities.Location
 import com.skyrel74.ricknmorty.databinding.FragmentLocationBinding
+import com.skyrel74.ricknmorty.di.Application
 import com.skyrel74.ricknmorty.presentation.location.LocationAdapter.Companion.VISIBLE_THRESHOLD
+import com.skyrel74.ricknmorty.presentation.locationDetails.LOCATION_ID_KEY
+import com.skyrel74.ricknmorty.presentation.locationDetails.LocationDetailsFragment
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.BackpressureStrategy
@@ -40,7 +43,15 @@ class LocationFragment : DaggerFragment(R.layout.fragment_location) {
             with(rvLocation) {
                 layoutManager = GridLayoutManager(requireContext(), 2)
                 adapter = LocationAdapter {
-                    // Do smth on item click
+                    val fragment = LocationDetailsFragment()
+                    val bundle = Bundle()
+                    bundle.putInt(LOCATION_ID_KEY, it.id)
+                    fragment.arguments = bundle
+                    parentFragmentManager.beginTransaction()
+                        .replace(
+                            R.id.fragment_container,
+                            fragment
+                        ).addToBackStack(Application.APP_BACKSTACK).commit()
                 }.also { locationAdapter = it }
                 addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.VERTICAL))
                 addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.HORIZONTAL))

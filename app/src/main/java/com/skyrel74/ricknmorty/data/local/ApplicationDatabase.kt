@@ -14,7 +14,7 @@ import com.skyrel74.ricknmorty.util.Converters
     Character::class,
     Episode::class,
     Location::class
-], version = 6, exportSchema = false)
+], version = 7, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class ApplicationDatabase : RoomDatabase() {
 

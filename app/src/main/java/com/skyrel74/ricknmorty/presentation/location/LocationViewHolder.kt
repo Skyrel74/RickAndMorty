@@ -12,10 +12,10 @@ class LocationViewHolder(
 
     fun bind(item: Location) {
         with(binding) {
-            tvName.text = getStringInTemplate(R.string.episode_name_template, item.name)
-            tvType.text = getStringInTemplate(R.string.episode_episode_template, item.type)
+            tvName.text = getStringInTemplate(R.string.location_name_template, item.name)
+            tvType.text = getStringInTemplate(R.string.location_type_template, item.type)
             tvDimension.text =
-                getStringInTemplate(R.string.episode_air_date_template, item.dimension)
+                getStringInTemplate(R.string.location_dimension_template, item.dimension)
             itemLocation.setOnClickListener {
                 onItemClick(item)
             }

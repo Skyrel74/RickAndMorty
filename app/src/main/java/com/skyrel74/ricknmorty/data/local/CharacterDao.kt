@@ -17,6 +17,9 @@ interface CharacterDao {
     @Query("SELECT * FROM character_table WHERE id LIKE :id")
     fun get(id: Int): Observable<Character>
 
+    @Query("SELECT * FROM character_table WHERE id IN (:idList)")
+    fun getMultiple(idList: List<Int>): Observable<List<Character>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(characterList: List<Character>): Completable
 
@@ -25,4 +28,7 @@ interface CharacterDao {
 
     @Query("SELECT COUNT(id) FROM character_table")
     fun getCount(): Observable<Int>
+
+    @Query("SELECT COUNT(id) FROM character_table WHERE id IN (:idList)")
+    fun getMultipleCount(idList: List<Int>): Observable<Int>
 }

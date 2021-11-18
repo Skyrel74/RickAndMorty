@@ -21,8 +21,39 @@
     <string name="episode_episode_template">Номер эпизода: %s</string>
     <string name="episode_air_date_template">Дата релиза: %s</string>
 
+    <!-- Episode Details -->
+    <string name="episode_created_template">Создано: %s</string>
+
     <!-- Location Item -->
     <string name="location_name_template">Название: %s</string>
     <string name="location_type_template">Тип: %s</string>
     <string name="location_dimension_template">Измерение: %s</string>
+
+    <!-- Chips -->
+    <string name="chips_chose_label">Поля для поиска</string>
+
+    <!-- Character Chips -->
+    <string name="chips_character_name_label">Имя</string>
+    <string name="chips_character_species_label">Вид</string>
+    <string name="chips_character_type_label">Тип</string>
+    <string name="chips_character_status_label">Статус</string>
+    <string name="chips_character_status_alive">Жив</string>
+    <string name="chips_character_status_dead">Мёртв</string>
+    <string name="chips_character_status_unknown">Неизвестно</string>
+    <string name="chips_character_gender_label">Пол</string>
+    <string name="chips_character_gender_female">Женский</string>
+    <string name="chips_character_gender_male">Мужской</string>
+    <string name="chips_character_gender_genderless">Бесполый</string>
+    <string name="chips_character_gender_unknown">Неизвестно</string>
+
+    <!-- Location Chips -->
+    <string name="chips_location_name">Название</string>
+    <string name="chips_location_type">Тип</string>
+    <string name="chips_location_dimension">Измерение</string>
+
+    <!-- Episode Chips -->
+    <string name="chips_episode_name">Название</string>
+    <string name="chips_episode_episode">Код</string>
+
+
 </resources>

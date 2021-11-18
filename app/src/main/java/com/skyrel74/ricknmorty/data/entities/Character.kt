@@ -16,6 +16,8 @@ data class Character(
     val status: Status,
     @SerializedName("species")
     val species: String,
+    @SerializedName("type")
+    val type: String,
     @SerializedName("gender")
     val gender: Gender,
     @SerializedName("origin")

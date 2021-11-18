@@ -12,7 +12,12 @@ import com.skyrel74.ricknmorty.R
 import com.skyrel74.ricknmorty.data.entities.Character
 import com.skyrel74.ricknmorty.data.entities.Episode
 import com.skyrel74.ricknmorty.databinding.FragmentCharacterDetailsBinding
+import com.skyrel74.ricknmorty.di.Application
 import com.skyrel74.ricknmorty.presentation.characterDetails.CharacterDetailsAdapter.Companion.VISIBLE_THRESHOLD
+import com.skyrel74.ricknmorty.presentation.episodeDetails.EPISODE_ID_KEY
+import com.skyrel74.ricknmorty.presentation.episodeDetails.EpisodeDetailsFragment
+import com.skyrel74.ricknmorty.presentation.locationDetails.LOCATION_ID_KEY
+import com.skyrel74.ricknmorty.presentation.locationDetails.LocationDetailsFragment
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.BackpressureStrategy
@@ -42,13 +47,20 @@ class CharacterDetailsFragment : DaggerFragment(R.layout.fragment_character_deta
         with(binding.rvEpisodeDetails) {
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = CharacterDetailsAdapter {
-
+                val fragment = EpisodeDetailsFragment()
+                val bundle = Bundle()
+                bundle.putInt(EPISODE_ID_KEY, it.id)
+                fragment.arguments = bundle
+                parentFragmentManager.beginTransaction()
+                    .replace(
+                        R.id.fragment_container,
+                        fragment
+                    ).addToBackStack(Application.APP_BACKSTACK).commit()
             }.also { detailsAdapter = it }
         }
 
         setupData(id)
         setupListListener()
-
     }
 
     private fun setupData(id: Int) {
@@ -74,13 +86,33 @@ class CharacterDetailsFragment : DaggerFragment(R.layout.fragment_character_deta
                 getStringInTemplate(R.string.character_status_template, character.status.toString())
             tvLocationDetails.text =
                 getStringInTemplate(R.string.character_location_template, character.location.name)
+            tvLocationDetails.setOnClickListener {
+                replaceLocationFragment(character.location.url)
+            }
             tvOriginDetails.text =
-                getStringInTemplate(R.string.character_status_template, character.origin.name)
+                getStringInTemplate(R.string.character_origin_template, character.origin.name)
+            tvOriginDetails.setOnClickListener {
+                replaceLocationFragment(character.origin.url)
+            }
             Glide.with(this@CharacterDetailsFragment)
                 .load(character.image)
                 .skipMemoryCache(true)
                 .into(ivCharacterDetails)
         }
+    }
+
+    private fun replaceLocationFragment(url: String) {
+        val startIndex = url.lastIndexOf("/") + 1
+        val locationId = url.substring(startIndex, url.length).toInt()
+        val fragment = LocationDetailsFragment()
+        val bundle = Bundle()
+        bundle.putInt(LOCATION_ID_KEY, locationId)
+        fragment.arguments = bundle
+        parentFragmentManager.beginTransaction()
+            .replace(
+                R.id.fragment_container,
+                fragment
+            ).addToBackStack(Application.APP_BACKSTACK).commit()
     }
 
     private fun setupListListener() {

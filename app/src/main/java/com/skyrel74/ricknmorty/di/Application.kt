@@ -25,6 +25,7 @@ class Application : DaggerApplication() {
     companion object {
 
         const val API_BASE_URL = "https://rickandmortyapi.com/api/"
+        const val APP_BACKSTACK = "APP_BACKSTACK"
 
         object Variables {
             var isNetworkConnected: Boolean by Delegates.observable(false) { property, oldValue, newValue ->

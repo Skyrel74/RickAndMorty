@@ -6,11 +6,15 @@ import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 interface EpisodeService {
 
     @GET("episode")
-    fun getAll(@Query("page") page: Int): Single<EpisodeResponse>
+    fun getAll(
+        @Query("page") page: Int,
+        @QueryMap queryMap: Map<String, String>,
+    ): Single<EpisodeResponse>
 
     @GET("episode/{id}")
     fun get(@Path("id") id: Int): Single<Episode>

@@ -1,4 +1,4 @@
-package com.skyrel74.ricknmorty.presentation.character
+package com.skyrel74.ricknmorty.presentation.locationDetails
 
 import android.os.Bundle
 import android.util.Log
@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.skyrel74.ricknmorty.R
 import com.skyrel74.ricknmorty.data.entities.Character
-import com.skyrel74.ricknmorty.databinding.FragmentCharacterBinding
-import com.skyrel74.ricknmorty.di.Application.Companion.APP_BACKSTACK
+import com.skyrel74.ricknmorty.data.entities.Location
+import com.skyrel74.ricknmorty.databinding.FragmentLocationDetailsBinding
+import com.skyrel74.ricknmorty.di.Application
+import com.skyrel74.ricknmorty.presentation.character.CharacterAdapter
 import com.skyrel74.ricknmorty.presentation.character.CharacterAdapter.Companion.VISIBLE_THRESHOLD
 import com.skyrel74.ricknmorty.presentation.characterDetails.CHARACTER_ID_KEY
 import com.skyrel74.ricknmorty.presentation.characterDetails.CharacterDetailsFragment
@@ -23,50 +25,63 @@ import io.reactivex.rxjava3.processors.PublishProcessor
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
-class CharacterFragment : DaggerFragment(R.layout.fragment_character) {
+const val LOCATION_ID_KEY = "LOCATION_ID_KEY"
 
-    private val binding by viewBinding(FragmentCharacterBinding::bind)
-    private var characterAdapter: CharacterAdapter? = null
+class LocationDetailsFragment : DaggerFragment(R.layout.fragment_location_details) {
+
+    private val binding by viewBinding(FragmentLocationDetailsBinding::bind)
+    private val compositeDisposable = CompositeDisposable()
 
     @Inject
-    lateinit var viewModel: CharacterViewModel
+    lateinit var viewModel: LocationDetailsViewModel
 
-    private val compositeDisposable = CompositeDisposable()
+    private var characterAdapter: CharacterAdapter? = null
 
     private val paginator: PublishProcessor<Int> = PublishProcessor.create()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val id = requireArguments().getInt(LOCATION_ID_KEY)
 
-        with(binding) {
-            with(rvCharacter) {
-                layoutManager = GridLayoutManager(requireContext(), 2)
-                adapter = CharacterAdapter {
-                    val fragment = CharacterDetailsFragment()
-                    val bundle = Bundle()
-                    bundle.putInt(CHARACTER_ID_KEY, it.id)
-                    fragment.arguments = bundle
-                    parentFragmentManager.beginTransaction()
-                        .replace(
-                            R.id.fragment_container,
-                            fragment
-                        ).addToBackStack(APP_BACKSTACK).commit()
-                }.also { characterAdapter = it }
-            }
-            swipeContainer.setOnRefreshListener {
-                refreshData()
-            }
-
-            swipeContainer.setColorSchemeResources(
-                android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light
-            )
+        with(binding.rvCharacter) {
+            layoutManager = GridLayoutManager(requireContext(), 2)
+            adapter = CharacterAdapter {
+                val fragment = CharacterDetailsFragment()
+                val bundle = Bundle()
+                bundle.putInt(CHARACTER_ID_KEY, it.id)
+                fragment.arguments = bundle
+                parentFragmentManager.beginTransaction()
+                    .replace(
+                        R.id.fragment_container,
+                        fragment
+                    ).addToBackStack(Application.APP_BACKSTACK).commit()
+            }.also { characterAdapter = it }
         }
 
+        setupData(id)
         setupListListener()
-        subscribeForData()
+    }
+
+    private fun setupData(id: Int) {
+        val characterDetails = viewModel.getLocationById(id)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ location ->
+                setLocation(location)
+                subscribeForData(location.residents)
+            }, {})
+
+        compositeDisposable.add(characterDetails)
+    }
+
+    private fun setLocation(location: Location) {
+        with(binding) {
+            tvNameDetails.text =
+                getStringInTemplate(R.string.location_name_template, location.name)
+            tvTypeDetails.text =
+                getStringInTemplate(R.string.location_type_template, location.type)
+            tvDimensionDetails.text =
+                getStringInTemplate(R.string.location_dimension_template, location.dimension)
+        }
     }
 
     private fun setupListListener() {
@@ -83,28 +98,21 @@ class CharacterFragment : DaggerFragment(R.layout.fragment_character) {
                     }
                 }
             })
-//            (activity as MainActivity).setSearchListener { newText: String? ->
-//                characterAdapter!!.filter.filter(newText)
-//            }
         }
     }
 
-    private fun subscribeForData() {
+    private fun subscribeForData(urlList: List<String>) {
         val pagination = paginator
             .onBackpressureBuffer()
-            .doOnSubscribe {
-                binding.progressBar.visibility = View.VISIBLE
-            }
             .concatMap { page: Int ->
                 viewModel.pageNumber = page
-                viewModel.getCharacters().toFlowable(BackpressureStrategy.BUFFER)
+                viewModel.getMultipleCharacters(urlList).toFlowable(BackpressureStrategy.BUFFER)
                     .subscribeOn(Schedulers.io())
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ items: List<Character> ->
                 val characters = characterAdapter!!.currentList.plus(items)
                 characterAdapter!!.submitList(characters)
-                binding.progressBar.visibility = View.GONE
             }, this::showError)
 
         compositeDisposable.add(pagination)
@@ -112,16 +120,8 @@ class CharacterFragment : DaggerFragment(R.layout.fragment_character) {
         paginator.onNext(viewModel.pageNumber)
     }
 
-    private fun refreshData() {
-        val characters = viewModel.refresh()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .doFinally { binding.swipeContainer.isRefreshing = false }
-            .subscribe({ items: List<Character> ->
-                characterAdapter!!.submitList(items)
-            }, this::showError)
-        compositeDisposable.add(characters)
-    }
+    private fun getStringInTemplate(stringId: Int, text: String) =
+        String.format(requireContext().resources.getString(stringId), text)
 
     private fun showError(e: Throwable) {
         Log.e("CharactersFragment", e.stackTraceToString())
@@ -129,8 +129,8 @@ class CharacterFragment : DaggerFragment(R.layout.fragment_character) {
     }
 
     override fun onDestroy() {
-        compositeDisposable.clear()
-        characterAdapter = null
         super.onDestroy()
+        characterAdapter = null
+        compositeDisposable.clear()
     }
 }

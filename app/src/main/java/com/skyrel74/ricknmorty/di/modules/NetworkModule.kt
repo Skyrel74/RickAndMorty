@@ -1,6 +1,7 @@
 package com.skyrel74.ricknmorty.di.modules
 
 import android.net.Uri
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.skyrel74.ricknmorty.data.remote.CharacterService
@@ -43,6 +44,8 @@ class NetworkModule {
         .client(OkHttpClient().newBuilder().addInterceptor { chain ->
             val request = chain.request()
             val response = chain.proceed(request)
+            Log.d("qwe", request.toString())
+            Log.d("qwe", response.toString())
             response
         }.build())
         .addCallAdapterFactory(callAdapterFactory)

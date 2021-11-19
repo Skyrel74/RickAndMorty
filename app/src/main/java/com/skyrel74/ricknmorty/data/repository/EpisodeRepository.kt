@@ -13,23 +13,22 @@ class EpisodeRepository @Inject constructor(
     private val local: EpisodeDao,
     private val remote: EpisodeService,
 ) {
+    init {
+        local.getCount().subscribe({
+            localCount = it
+        }, { logError("EpisodeRepository", it) })
+    }
 
     private var localCount: Int = Int.MAX_VALUE
     var remoteCount: Int = Int.MAX_VALUE
     private var localMultipleCount: Int = 0
 
-    fun getAll(page: Int, queryMap: Map<String, String>): Observable<List<Episode>> {
-
-        val query: String = queryMap.map { "${it.key}=${it.value}" }.joinToString(separator = "&")
-
-        local.getCount(query).subscribe({
-            localCount = it
-        }, { logError("EpisodeRepository", it) })
+    fun getAll(page: Int): Observable<List<Episode>> {
 
         return if (isNetworkConnected && remoteCount > localCount)
-            getRemote(page, queryMap)
+            getRemote(page)
         else
-            getLocal(query)
+            getLocal()
     }
 
     fun get(id: Int): Observable<Episode> =
@@ -65,10 +64,10 @@ class EpisodeRepository @Inject constructor(
             getLocal(subList)
     }
 
-    fun refresh(queryMap: Map<String, String>): Observable<List<Episode>> = getRemote(1, queryMap)
+    fun refresh(): Observable<List<Episode>> = getRemote(1)
 
-    private fun getRemote(page: Int, queryMap: Map<String, String>): Observable<List<Episode>> =
-        remote.getAll(page, queryMap)
+    private fun getRemote(page: Int): Observable<List<Episode>> =
+        remote.getAll(page)
             .map { response ->
                 remoteCount = response.info.count
                 response.results
@@ -101,8 +100,8 @@ class EpisodeRepository @Inject constructor(
     private fun saveLocal(episode: Episode) =
         local.insert(episode).subscribe({}, { logError("EpisodeRepository", it) })
 
-    private fun getLocal(query: String): Observable<List<Episode>> =
-        local.getAll(query).doOnError { logError("EpisodeRepository", it) }
+    private fun getLocal(): Observable<List<Episode>> =
+        local.getAll().doOnError { logError("EpisodeRepository", it) }
 
     private fun getLocal(id: Int): Observable<Episode> =
         local.get(id).doOnError { logError("EpisodeRepository", it) }

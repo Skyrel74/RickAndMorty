@@ -17,7 +17,6 @@ import com.skyrel74.ricknmorty.di.Application
 import com.skyrel74.ricknmorty.presentation.episode.EpisodeAdapter.Companion.VISIBLE_THRESHOLD
 import com.skyrel74.ricknmorty.presentation.episodeDetails.EPISODE_ID_KEY
 import com.skyrel74.ricknmorty.presentation.episodeDetails.EpisodeDetailsFragment
-import com.skyrel74.ricknmorty.presentation.main.MainActivity
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.BackpressureStrategy
@@ -58,6 +57,9 @@ class EpisodeFragment : DaggerFragment(R.layout.fragment_episode) {
                 addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.VERTICAL))
                 addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.HORIZONTAL))
             }
+            swipeContainer.setOnRefreshListener {
+                refreshData()
+            }
 
             swipeContainer.setColorSchemeResources(
                 android.R.color.holo_blue_bright,
@@ -67,42 +69,29 @@ class EpisodeFragment : DaggerFragment(R.layout.fragment_episode) {
         }
 
         setupListListener()
-        subscribeForData(emptyMap())
-        binding.swipeContainer.setOnRefreshListener {
-            refreshData(emptyMap())
-        }
-        (activity as MainActivity).setSearchListener { map ->
-            viewModel.pageNumber = 1
-            episodeAdapter!!.submitList(emptyList())
-            subscribeForData(map)
-            binding.swipeContainer.setOnRefreshListener {
-                refreshData(map)
-            }
-        }
+        subscribeForData()
     }
 
     private fun setupListListener() {
-        with(binding) {
-            with(rvEpisode) {
-                addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                        super.onScrolled(recyclerView, dx, dy)
+        with(binding.rvEpisode) {
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
 
-                        val totalItemCount = layoutManager!!.itemCount
-                        val lastVisibleItem =
-                            (layoutManager!! as LinearLayoutManager).findLastVisibleItemPosition()
-                        if (totalItemCount <= (lastVisibleItem + VISIBLE_THRESHOLD)
-                            && episodeAdapter!!.currentList.size < viewModel.getRemoteCount()
-                        ) {
-                            paginator.onNext(viewModel.pageNumber + 1)
-                        }
+                    val totalItemCount = layoutManager!!.itemCount
+                    val lastVisibleItem =
+                        (layoutManager!! as LinearLayoutManager).findLastVisibleItemPosition()
+                    if (totalItemCount <= (lastVisibleItem + VISIBLE_THRESHOLD)
+
+                    ) {
+                        paginator.onNext(viewModel.pageNumber + 1)
                     }
-                })
-            }
+                }
+            })
         }
     }
 
-    private fun subscribeForData(queryMap: Map<String, String>) {
+    private fun subscribeForData() {
         val pagination = paginator
             .onBackpressureBuffer()
             .doOnSubscribe {
@@ -110,7 +99,7 @@ class EpisodeFragment : DaggerFragment(R.layout.fragment_episode) {
             }
             .concatMap { page: Int ->
                 viewModel.pageNumber = page
-                viewModel.getEpisodes(queryMap).toFlowable(BackpressureStrategy.BUFFER)
+                viewModel.getEpisodes().toFlowable(BackpressureStrategy.BUFFER)
                     .subscribeOn(Schedulers.io())
             }
             .observeOn(AndroidSchedulers.mainThread())
@@ -126,8 +115,8 @@ class EpisodeFragment : DaggerFragment(R.layout.fragment_episode) {
         paginator.onNext(viewModel.pageNumber)
     }
 
-    private fun refreshData(queryMap: Map<String, String>) {
-        val characters = viewModel.refresh(queryMap)
+    private fun refreshData() {
+        val characters = viewModel.refresh()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
             .doFinally { binding.swipeContainer.isRefreshing = false }
@@ -137,9 +126,9 @@ class EpisodeFragment : DaggerFragment(R.layout.fragment_episode) {
     }
 
     private fun showError(e: Throwable) {
-        Log.e("EpisodeFragment", e.localizedMessage)
-        if (!e.localizedMessage.contains("HTTP 404"))
-            Toast.makeText(requireContext(), "Произошла ошибка", Toast.LENGTH_SHORT).show()
+        Log.e("EpisodeFragment", e.stackTraceToString())
+        Toast.makeText(requireContext(), "Произошла ошибка", Toast.LENGTH_SHORT).show()
+
     }
 
     override fun onDestroy() {

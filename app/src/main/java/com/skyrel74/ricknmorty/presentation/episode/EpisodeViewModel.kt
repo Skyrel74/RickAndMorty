@@ -12,12 +12,10 @@ class EpisodeViewModel @Inject constructor(
 
     var pageNumber: Int = 1
 
-    fun getRemoteCount() = episodeRepository.remoteCount
-
-    fun getEpisodes(queryMap: Map<String, String>): Observable<List<Episode>> {
-        return episodeRepository.getAll(pageNumber, queryMap)
+    fun getEpisodes(): Observable<List<Episode>> {
+        return episodeRepository.getAll(pageNumber)
     }
 
-    fun refresh(queryMap: Map<String, String>): Observable<List<Episode>> =
-        episodeRepository.refresh(queryMap)
+    fun refresh(): Observable<List<Episode>> =
+        episodeRepository.refresh()
 }
